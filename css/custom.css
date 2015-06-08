@@ -1,0 +1,46 @@
+.reveal.reveal.reveal img {
+	border: none;
+	margin: 0;
+	box-shadow: none;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.reveal .slides section .highlight-red1 {
+	color: #ff2c2d;
+}
+
+.reveal .slides section .highlight-green1 {
+	color: #17ff2e;
+}
+
+.reveal .slides section .highlight-orange {
+	color: #ff8811;
+}
+
+.reveal .slides section .highlight-yellow {
+	color: #ffff00;
+}
+
+.reveal .slides section .highlight-aqua {
+	color: #78ffff;
+}
+
+.reveal .slides pre code {
+	font-family: "Monaco", monospace;
+}
+
+.reveal .slides pre code.big-code {
+	font-size: 30px;
+	line-height: normal;
+	padding: 10px;
+}
+
+.reveal .slides pre code.medium-code {
+	font-size: 22px;
+	line-height: normal;
+	padding: 10px;
+}
+
