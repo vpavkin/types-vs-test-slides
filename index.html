@@ -73,7 +73,7 @@
     </section>
     <section>
       <h2 class="highlight-orange">Handling runtime exceptions</h2>
-        <pre >
+        <pre>
           <code data-trim class="scala big-code">
             assert(!list.isEmpty, "List must be empty")
           </code>
@@ -190,6 +190,88 @@ logger.error(
     <section>
       <h1>The goal</h1> <h2>To move as much as possible to the <span class="highlight-green1">Compiler</span></h2>
     </section>
+    <section>
+      <h1>How?</h1>
+      <h2 class="fragment">Just give it <br/><span class="highlight-green1">enough type information.</span></h2>
+      <h4 class="fragment">Type system to the rescue!</h4>
+    </section>
+    <section>
+      <h2>Before we start...</h2>
+      <h1 class=" fragment fade-in">Examples domain?</h1>
+    </section>
+    <section>
+      <h1>Beefcakes!</h1>
+      <img src="img/beefcakes.jpg" width="80%">
+    </section>
+    <section>
+      <h2>Ok?</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+def becomeAMan(douchebag: Person): Man =
+  new Man(douchebag.renameTo("Arny"))
+        </code>
+      </pre>
+      <div class="fragment roll-in">
+        <h2 class="highlight-red1">No! Unhandled runtime failure!</h2>
+        <pre>
+          <code data-trim class="scala big-code">
+            becomeAMan(null)
+          </code>
+        </pre>
+      </div>
+    </section>
+    <section>
+      <h1 class="highlight-red1">NULL</h1>
+      <img src="img/null.jpg">
+    </section>
+    <section>
+      <h2>Maybe like this?</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+def becomeAMan(douchebag: Person): Man =
+  if(douchebag != null)
+    new Man(douchebag.renameTo("Arny"))
+  else
+    null
+        </code>
+      </pre>
+    </section>
+    <section>
+      <h2 class="highlight-yellow">Still not nice.</h2>
+      <ul>
+        <li class="fragment roll-in">runtime check</li>
+        <li class="fragment roll-in">code client doesn't expect <code class="highlight-aqua">null</code>...</li>
+        <li class="fragment roll-in">... so now <span class="highlight-yellow">he</span> has to do <span class="highlight-yellow">runtime checks</span></li>
+      </ul>
+    </section>
+    <section>
+      <blockquote style="font-size: 150%; width: 100%">
+        If you control the source code,<br/>
+        don't ever use <code>null</code> as a return result.<br/>
+        It's like farting in an elevator.
+      </blockquote>
+      <br/>
+      <p style="text-align: right; color:gray;">Some random guy at a random Scala forum</p>
+    </section>
+    <section>
+      <h3>The problem is</h3>
+      <h2 class="fragment roll-in highlight-yellow">insufficient type information!</h2>
+      <h3 class="fragment roll-in">Return type should be something like <code class="highlight-aqua">ManOrNull</code></h3>
+    </section>
+    <section>
+      <h1 class="highlight-green1">Option</h1>
+      <img src="img/option.jpg">
+    </section>
+    <section>
+      <h2 class="highlight-green1">Option</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+sealed trait Option[T]
+case class Some[T](x: T) extends Option[T]
+case object None extends Option[Nothing]
+        </code>
+      </pre>
+    </section>
   </div>
 
 </div>
@@ -212,24 +294,24 @@ logger.error(
     // Optional reveal.js plugins
     dependencies: [
       {
-        src: 'lib/js/classList.js', condition: function () {
+        src: 'lib/js/classList.js', condition: function() {
         return !document.body.classList;
       }
       },
       {
-        src: 'plugin/markdown/marked.js', condition: function () {
+        src: 'plugin/markdown/marked.js', condition: function() {
         return !!document.querySelector('[data-markdown]');
       }
       },
       {
-        src: 'plugin/markdown/markdown.js', condition: function () {
+        src: 'plugin/markdown/markdown.js', condition: function() {
         return !!document.querySelector('[data-markdown]');
       }
       },
       {
-        src: 'plugin/highlight/highlight.js', async: true, condition: function () {
+        src: 'plugin/highlight/highlight.js', async: true, condition: function() {
         return !!document.querySelector('pre code');
-      }, callback: function () {
+      }, callback: function() {
         hljs.initHighlightingOnLoad();
       }
       },

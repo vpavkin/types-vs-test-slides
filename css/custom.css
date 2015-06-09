@@ -4,6 +4,11 @@
 	box-shadow: none;
 }
 
+.reveal pre{
+	width: 100%;
+	box-shadow: none;
+}
+
 .hidden {
 	visibility: hidden;
 }
@@ -28,7 +33,7 @@
 	color: #78ffff;
 }
 
-.reveal .slides pre code {
+.reveal .slides code {
 	font-family: "Monaco", monospace;
 }
 
