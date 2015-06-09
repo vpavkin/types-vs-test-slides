@@ -208,14 +208,17 @@ logger.error(
       <pre>
         <code data-trim class="scala big-code">
 def becomeAMan(douchebag: Person): Man =
-  new Man(douchebag.renameTo("Arny"))
+  if(douchebag.weight > 70)
+    new Man(douchebag.renameTo("Arny"))
+  else
+    null
         </code>
       </pre>
       <div class="fragment roll-in">
         <h2 class="highlight-red1">No! Unhandled runtime failure!</h2>
         <pre>
           <code data-trim class="scala big-code">
-            becomeAMan(null)
+            becomeAMan(vpavkin).name  //vpavkin.weight < 70
           </code>
         </pre>
       </div>
@@ -225,23 +228,22 @@ def becomeAMan(douchebag: Person): Man =
       <img src="img/null.jpg">
     </section>
     <section>
-      <h2>Maybe like this?</h2>
+      <h2>Can we handle this?</h2>
       <pre>
         <code data-trim class="scala big-code">
-def becomeAMan(douchebag: Person): Man =
-  if(douchebag != null)
-    new Man(douchebag.renameTo("Arny"))
-  else
-    null
+var man = becomeAMan(person)
+if(man != null)
+  name
+else
+  //...
         </code>
       </pre>
     </section>
     <section>
       <h2 class="highlight-yellow">Still not nice.</h2>
       <ul>
-        <li class="fragment roll-in">runtime check</li>
-        <li class="fragment roll-in">code client doesn't expect <code class="highlight-aqua">null</code>...</li>
-        <li class="fragment roll-in">... so now <span class="highlight-yellow">he</span> has to do <span class="highlight-yellow">runtime checks</span></li>
+        <li class="fragment roll-in">compiler won't complain if you forget to check</li>
+        <li class="fragment roll-in">code client has to clutter code with <span class="highlight-yellow">runtime checks</span> (or fail)</li>
       </ul>
     </section>
     <section>
@@ -259,11 +261,11 @@ def becomeAMan(douchebag: Person): Man =
       <h3 class="fragment roll-in">Return type should be something like <code class="highlight-aqua">ManOrNull</code></h3>
     </section>
     <section>
-      <h1 class="highlight-green1">Option</h1>
+      <h1 class="highlight-green1"><code>Option</code></h1>
       <img src="img/option.jpg">
     </section>
     <section>
-      <h2 class="highlight-green1">Option</h2>
+      <h2 class="highlight-green1"><code>Option</code></h2>
       <pre>
         <code data-trim class="scala big-code">
 sealed trait Option[T]
@@ -272,8 +274,124 @@ case object None extends Option[Nothing]
         </code>
       </pre>
     </section>
+    <section>
+      <h2>Better API</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+def becomeAMan(douchebag: Person): Option[Man] =
+  if(douchebag.weight > 70)
+    Some(new Man(douchebag.renameTo("Arny")))
+  else
+    None
+        </code>
+      </pre>
+      <ul>
+        <li class="fragment roll-in">code is <span class="highlight-green1">documentation</span></li>
+        <li class="fragment roll-in">client has to deal with <code>None</code> result <span class="highlight-green1">at compile time.</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Use wrapped value?</h2>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala medium-code">
+def firstWorkout(douchebag: Person): Option[WorkoutResult] =
+  becomeAMan(douchebag).map(man => man.workout())
+        </code>
+      </pre>
+      <h2 class="fragment roll-in">Unwrap?</h2>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala medium-code">
+def willHaveASexyGirlfriend(douchebag: Person): Boolean =
+  becomeAMan(douchebag) match {
+    case Some(man) => true
+    case None => false
+  }
+        </code>
+      </pre>
+    </section>
+    <section>
+       <h1 class="highlight-orange">Exceptions</h1>
+       <img src="img/exception.gif" style="width: 30vw;">
+     </section>
+    <section>
+      <h2>Classic</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+def workout(man: Man): WorkoutResult =
+  if(!man.hasShaker)
+    throw new Error("Not enough protein!!!!111")
+  else
+    // do some squats or stare in the mirror for 1h
+        </code>
+      </pre>
+      <div class="fragment roll-in">
+        <h2 class="highlight-red1">Again!</h2>
+        <ul>
+          <li>Client either uses <code>try/catch</code> or fails at runtime!</li>
+          <li>Return type doesn't tell anything about possible failure</li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <h1>Let's add some types!</h1>
+    </section>
+    <section>
+      <h1><code>scala.Either</code></h1>
+      <h3>or</h3>
+      <h1><code>scalaz.\/</code></h1>
+    </section>
+    <section>
+      <h2>Declare possible failure</h2>
+      <img src="img/either.jpg">
+    </section>
+    <section>
+      <h2>Better API</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+def workout(man:Man): ProteinFail \/ WorkoutResult =
+  if(!man.hasShaker)
+    ProteinFail("Not enough protein!!!!111").left
+  else
+    someWorkoutResult.right
+        </code>
+      </pre>
+      <ul>
+        <li class="fragment roll-in">code is <span class="highlight-green1">documentation</span></li>
+        <li class="fragment roll-in">client has to deal with errors <span class="highlight-green1">at compile time.</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2 class="highlight-green1"><code>scalaz.\/</code></h2>
+      <pre>
+        <code data-trim class="scala big-code">
+sealed trait \/[E, R]
+case class -\/[E](a: E) extends (E \/ Nothing)
+case class \/-[R](a: R) extends (Nothing \/ R)
+        </code>
+      </pre>
+    </section>
+    <section>
+      <h2>Use wrapped value?</h2>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala medium-code">
+workout(man).map(result => submitToFacebook(result))
+// type is
+// ProteinFail \/ Future[List[FacebookLike]]
+        </code>
+      </pre>
+      <h2 class="fragment roll-in">Unwrap?</h2>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala medium-code">
+def tellAboutTheWorkout(w: ProteinFail \/ WorkoutResult): String =
+  w match {
+    case -\/(fail) => "Screw you proteins, I can do without it"
+    case \/-(result) =>
+      s"Dude, eat proteins, or you won't do like me: $result"
+  }
+        </code>
+      </pre>
+    </section>
   </div>
-
 </div>
 
 <script src="lib/js/head.min.js"></script>
