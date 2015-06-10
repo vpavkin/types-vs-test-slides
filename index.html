@@ -201,6 +201,7 @@ logger.error(
     <section>
       <h1>Beefcakes!</h1>
       <img src="img/beefcakes.jpg" width="80%">
+      <h4>No offense meant :)</h4>
     </section>
     <section>
       <h2>Ok?</h2>
@@ -580,6 +581,83 @@ val notAgainPlease = heDidIt.pullUp()
 // to method pullUp's type parameter bounds
          </code>
        </pre>
+    </section>
+    <section>
+      <h2>Path Dependent Types</h2>
+      <img src="img/path.jpg">
+    </section>
+    <section>
+      <h2>The Two Gyms</h2>
+      <pre>
+         <code data-trim class="scala big-code">
+class Gym(val name: String)
+class Beefcake(val gym: Gym){
+  def talkTo(other: Beefcake): Unit =
+    println("Wazzup, Hetch!")
+}
+         </code>
+      </pre>
+      <pre class="fragment roll-in">
+         <code data-trim class="scala big-code">
+val normalGym = new Gym("nicefitness")
+val swagGym = new Gym("kimberly")
+val normalGuy = new Beefcake(normalGym)
+val swagGuy = new Beefcake(swagGym)
+normalGuy.talkTo(swagGuy) // we don't want that
+         </code>
+      </pre>
+    </section>
+    <section>
+      <h2>The Two Gyms</h2>
+      <h2>Runtime solution</h2>
+      <pre>
+         <code data-trim class="scala big-code">
+class Beefcake(val gym: Gym){
+  def talkTo(other: Beefcake): Unit = {
+    // throws IllegalArgumentException if false
+    require(this.gym == other.gym)
+    println("Wazzup, Hetch!")
+  }
+}
+         </code>
+      </pre>
+    </section>
+    <section>
+      <h2>Path Dependent Types</h2>
+      <pre>
+         <code data-trim class="scala big-code">
+class A {
+  class B
+}
+val a1 = new A
+val a2 = new A
+var b = new a1.B // type is a1.B
+b = new a2.B // Compile Error: types don't match
+         </code>
+      </pre>
+      <h3 class="fragment roll-in">Type depends on the <span class="highlight-green1">value</span> it belongs to.</h3>
+    </section>
+    <section>
+      <h2>Type safe solution</h2>
+      <pre>
+         <code data-trim class="scala big-code">
+class Gym(val name: String){
+  class Beefcake(val gym: Gym){
+    def talkTo(other: Beefcake): Unit =
+    println("Wazzup, Hetch!")
+  }
+}
+         </code>
+      </pre>
+      <pre class="fragment roll-in">
+         <code data-trim class="scala big-code">
+val normalGym = new Gym("nicefitness")
+val swagGym = new Gym("kimberly")
+val normalGuy = new normalGym.Beefcake(normalGym)
+val swagGuy = new swagGym.Beefcake(swagGym)
+normalGuy.talkTo(swagGuy) // doesn't compile, Yay!
+         </code>
+      </pre>
     </section>
   </div>
 </div>
