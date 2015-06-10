@@ -391,6 +391,107 @@ def tellAboutTheWorkout(w: ProteinFail \/ WorkoutResult): String =
         </code>
       </pre>
     </section>
+    <section>
+      <h2><code>isInstanceOf[Man]</code></h2>
+      <img src="img/isInstanceOf.gif"  style="width: 30vw;">
+    </section>
+    <section>
+      <h2><code>isInstanceOf[T]</code></h2>
+      <pre>
+        <code data-trim class="scala big-code">
+trait GymClient
+case class Man(name: String) extends GymClient
+case class Douchebag(name: String) extends GymClient
+        </code>
+      </pre>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala big-code">
+def gymPrice(h: GymClient): Int =
+  if(h.isInstanceOf[Man]){
+    val man = h.asInstanceOf[Man]
+    if(man.name == "Arny") 0 else 100
+  } else {
+    200
+  }
+        </code>
+      </pre>
+    </section>
+    <section>
+      <h2>So runtime.</h2>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala big-code">
+// Add another client type
+case class PrettyGirl(name:String) extends GymClient
+        </code>
+      </pre>
+      <h3 class="fragment roll-in">It still compiles.</h3>
+      <h3 class="fragment roll-in highlight-red1">And we charge girls as much as douchebags! (<code class="highlight-yellow">... else 200</code>)</h3>
+      <h3 class="fragment roll-in highlight-red1">It's an unhandled runtime failure!</h3>
+    </section>
+    <section>
+      <h1><code>sealed</code> ADT</h1>
+      <h3>+</h3>
+      <h1>pattern matching</h1>
+    </section>
+    <section>
+      <h2><code>sealed</code> = can't be extended in other files</h2>
+      <img src="img/sealed.gif"  style="width: 30vw;">
+    </section>
+    <section>
+      <h2>Algebraic Data Type</h2>
+      <img src="img/adt.jpg"  style="width: 15vw;">
+      <p></p>
+      <h3 class="fragment roll-in">1) Product types</h3>
+      <h3 class="fragment roll-in">2) Sum types</h3>
+    </section>
+    <section>
+      <h2><span class="highlight-green1">Compiler knows</span><br/> all the possible class/trait children.</h2>
+    </section>
+    <section>
+      <h2>Sealed ADT + pattern matching</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+sealed trait GymClient
+case class Man(name: String) extends GymClient
+case class Douchebag(name: String) extends GymClient
+        </code>
+      </pre>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala big-code">
+def gymPrice(h: GymClient): Int = h match {
+  case Man("Arny") => 0
+  case _: Man => 100
+  case _: Douchebag => 200
+}
+// compiler checks, that match is exhaustive
+        </code>
+      </pre>
+    </section>
+    <section>
+      <h2>What if we add girls now?</h2>
+      <pre>
+        <code data-trim class="scala big-code">
+sealed trait GymClient
+case class Man(name: String) extends GymClient
+case class Douchebag(name: String) extends GymClient
+case class PrettyGirl(name:String) extends GymClient
+        </code>
+      </pre>
+      <pre class="fragment roll-in">
+        <code data-trim class="scala big-code">
+def gymPrice(h: GymClient): Int = h match {
+  case Man("Arny") => 0
+  case _: Man => 100
+  case _: Douchebag => 200
+}
+// COMPILE ERROR! Match fails for PrettyGirl.
+        </code>
+      </pre>
+    </section>
+    <section>
+      <h2 class="highlight-green1">Compiler saved us again!</h2>
+      <img src="img/compiler.jpg" style="width: 20vw">
+    </section>
   </div>
 </div>
 
