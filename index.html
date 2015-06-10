@@ -49,7 +49,6 @@
       <h2>Plan</h2>
       <ul>
         <li class="fragment roll-in">Fail Fast concept</li>
-        <li class="fragment roll-in">Scala Type System (in brief)</li>
         <li class="fragment roll-in">Type Safe Patterns</li>
       </ul>
     </section>
@@ -493,6 +492,51 @@ def gymPrice(h: GymClient): Int = h match {
       <img src="img/compiler.jpg" style="width: 20vw">
     </section>
     <section>
+      <h2>Tagging</h2>
+      <img src="img/tag.jpg" style="width: 30vw">
+    </section>
+    <section>
+      <h2>Gym DB</h2>
+       <pre>
+         <code data-trim class="scala big-code">
+case class Beefcake(id: String,
+                    name: String)
+case class GymPass(id: String,
+                   ownerId: String)
+         </code>
+       </pre>
+    </section>
+    <section>
+      <h2>Safer: <span class="fragment roll-in">Tags</span></h2>
+       <pre class="fragment roll-in">
+          <code data-trim class="scala big-code">
+trait JustTag
+def onlyTagged(value: String @@ JustTag): String
+  = s"Tagged string: $value"
+  // can use as plain String
+          </code>
+       </pre>
+       <pre class="fragment roll-in">
+          <code data-trim class="scala big-code">
+onlyTagged("plain string") // Compiler error
+val tagged = tag[JustTag]("tagged")
+onlyTagged(tagged) // OK
+          </code>
+       </pre>
+    </section>
+    <section>
+      <h2>Gym DB: safer keys</h2>
+       <pre>
+         <code data-trim class="scala big-code">
+case class Beefcake(id: String @@ Beefcake,
+                    name: String)
+case class GymPass(id: String @@ GymPass,
+                   ownerId: String @@ Beefcake)
+         </code>
+       </pre>
+    </section>
+
+    <section>
       <h2>Phantom Types</h2>
       <img src="img/PhantomType.jpg">
     </section>
@@ -534,12 +578,6 @@ val notAgainPlease = heDidIt.pullUp()
 // CompileError:
 // inferred type arguments [Up] do not conform
 // to method pullUp's type parameter bounds
-         </code>
-       </pre>
-       <pre class="fragment roll-in">
-         <code data-trim class="scala big-code">
-           val unbalancedBarbell = Barbel(RedPlate(),
-           BluePlate())
          </code>
        </pre>
     </section>
