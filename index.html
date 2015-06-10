@@ -492,6 +492,57 @@ def gymPrice(h: GymClient): Int = h match {
       <h2 class="highlight-green1">Compiler saved us again!</h2>
       <img src="img/compiler.jpg" style="width: 20vw">
     </section>
+    <section>
+      <h2>Phantom Types</h2>
+      <img src="img/PhantomType.jpg">
+    </section>
+    <section>
+      <h2>PullUp</h2>
+       <pre>
+         <code data-trim class="scala big-code">
+sealed trait PullUpState
+final class Up extends PullUpState
+final class Down extends PullUpState
+         </code>
+       </pre>
+    </section>
+    <section>
+      <h2>PullUp</h2>
+       <pre>
+         <code data-trim class="scala medium-code">
+class Beefcake[S &lt;: PullUpState] private () {
+  def pullUp[T &gt;: S &lt;: Down]() =
+      this.asInstanceOf[Beefcake[Up]]
+
+  def pullDown[T &gt;: S &lt;: Up]() =
+      this.asInstanceOf[Beefcake[Down]]
+}
+
+object Beefcake {
+  def create() = new Beefcake[Down]
+}
+         </code>
+       </pre>
+    </section>
+    <section>
+      <h2>PullUp</h2>
+       <pre>
+         <code data-trim class="scala big-code">
+val fresh = Beefcake.create() //Beefcake[Down]
+val heDidIt = fresh.pullUp() //Beefcake[Up]
+val notAgainPlease = heDidIt.pullUp()
+// CompileError:
+// inferred type arguments [Up] do not conform
+// to method pullUp's type parameter bounds
+         </code>
+       </pre>
+       <pre class="fragment roll-in">
+         <code data-trim class="scala big-code">
+           val unbalancedBarbell = Barbel(RedPlate(),
+           BluePlate())
+         </code>
+       </pre>
+    </section>
   </div>
 </div>
 
