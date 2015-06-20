@@ -201,7 +201,7 @@ logger.error(
     <section>
       <h1>Beefcakes!</h1>
       <img src="img/beefcakes.jpg" width="80%">
-      <h4>No offense meant :)</h4>
+      <h4>No offense intended :)</h4>
     </section>
     <section>
       <h2>Ok?</h2>
@@ -384,7 +384,7 @@ workout(man).map(result => submitToFacebook(result))
         <code data-trim class="scala medium-code">
 def tellAboutTheWorkout(w: ProteinFail \/ WorkoutResult): String =
   w match {
-    case -\/(fail) => "Screw you proteins, I can do without it"
+    case -\/(fail) => "F**k your proteins, I can do without it"
     case \/-(result) =>
       s"Dude, eat proteins, or you won't do like me: $result"
   }
@@ -658,6 +658,23 @@ val swagGuy = new swagGym.Beefcake(swagGym)
 normalGuy.talkTo(swagGuy) // doesn't compile, Yay!
          </code>
       </pre>
+    </section>
+    <section>
+      <h2>This is not a talk <br/> about Scala type system.</h2>
+      <div class="fragment roll-in">
+        <h2>Not covered:</h2>
+        <ul>
+          <li>Trait composition</li>
+          <li>Existential types</li>
+          <li>Macros</li>
+          <li>Type Classes</li>
+          <li>Shapeless</li>
+          <li>...</li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <h1>Q &amp; A</h1>
     </section>
   </div>
 </div>
