@@ -428,6 +428,28 @@ case class PrettyGirl(name:String) extends GymClient
       <h3 class="fragment roll-in highlight-red1">And we charge girls as much as douchebags! (<code class="highlight-yellow">... else 200</code>)</h3>
       <h3 class="fragment roll-in highlight-red1">It's an unhandled runtime failure!</h3>
     </section>
+        <section>
+      <h2><code>isInstanceOf[T]</code></h2>
+      <pre>
+        <code data-trim class="scala big-code">
+trait GymClient
+case class Man(name: String) extends GymClient
+case class Douchebag(name: String) extends GymClient
+case class PrettyGirl(name:String) extends GymClient
+        </code>
+      </pre>
+      <pre>
+        <code data-trim class="scala big-code">
+def gymPrice(h: GymClient): Int =
+  if(h.isInstanceOf[Man]){
+    val man = h.asInstanceOf[Man]
+    if(man.name == "Arny") 0 else 100
+  } else {
+    200
+  }
+        </code>
+      </pre>
+    </section>
     <section>
       <h1><code>sealed</code> ADT</h1>
       <h3>+</h3>
