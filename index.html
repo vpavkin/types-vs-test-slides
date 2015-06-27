@@ -43,6 +43,13 @@
       <h3 class="fragment roll-in">vs</h3>
       <h2 class="fragment roll-in">Runtime Checks and Unit Tests</h2>
       <p class="fragment roll-in">Vladimir Pavkin</p>
+      <aside class="notes">
+        * разработчик группы интеграции провайдеров <br/>
+        * 3 года фронтенда различного качества, в том числе на самом совеременном стеке<br/>
+        * полгода скалы, самое крутое и яркое впечатление<br/>
+        * фронтенд, как бы я его ни любил, и сколько бы движухи сейчас не было со
+        всякими ES6 - безнадежно отстает
+      </aside>
     </section>
 
     <section>
@@ -51,13 +58,24 @@
         <li class="fragment roll-in">Fail Fast concept</li>
         <li class="fragment roll-in">Type Safe Patterns</li>
       </ul>
+      <aside class="notes">
+        * кстати, кто из вас писал что-нибудь на Scala?<br/>
+        * Я не стал включать рассказ о синтаксисе Scala<br/>
+        * По традиции, все вопросы в конце, но вопросы по коду примеров можно задавать сразу на месте
+      </aside>
     </section>
     <section>
       <h1>Fail Fast</h1>
       <img class="fragment roll-in" src="img/fail_fast.gif"/>
+      <aside class="notes">
+        * стремимся к ... -> перелистываю
+      </aside>
     </section>
     <section>
       <h1>Immediate and visible failure</h1>
+      <aside class="notes">
+        * про уменьшение цикла обратной связи
+      </aside>
     </section>
     <section>
       <h1>Where can it fail?</h1>
@@ -121,6 +139,12 @@ try {
         <li class="highlight-orange">Handled runtime exceptions & assertions</li>
         <li class="highlight-red1">Unhandled runtime failure</li>
       </ul>
+      <aside class="notes">
+        * Как вы могли догадаться - мы рассматриваем варианты в порядке уменьшения цикла обратной связи<br/>
+        * Три рассмотренных варианта - не самые лучшие.<br/>
+        * Минимум - поднимаем разрабов и хотфикс<br/>
+        * Максимум - полный релизный цикл
+      </aside>
     </section>
     <section>
       <h2 class="highlight-aqua">Unit tests</h2>
@@ -142,6 +166,10 @@ it should "not throw for empty stack" in {
 }
         </code>
       </pre>
+      <aside class="notes">
+        * Иногда тестируем то, что не относится к бизнес-логике<br/>
+        * Есть возможность выкатить баг в прод (не написать тест)
+      </aside>
     </section>
     <section>
       <h1>Where can it fail?</h1>
@@ -174,6 +202,9 @@ logger.error(
 )
            </code>
          </pre>
+      <aside class="notes">
+        Линтеры как и Unit-тесты можно обойти
+      </aside>
     </section>
     <section>
       <h1>Where can it fail?</h1>
@@ -185,6 +216,11 @@ logger.error(
         <li class="highlight-orange">Handled runtime exceptions & assertions</li>
         <li class="highlight-red1">Unhandled runtime failure</li>
       </ul>
+      <aside class="notes">
+        * С точки зрения FailFast уже гораздо лучше - ошибки до выпуска<br/>
+        * Для динамических языков на этом - всё<br/>
+        * Компилятор - лучший инструмент с точки зрения FailFast
+      </aside>
     </section>
     <section>
       <h1>The goal</h1> <h2>To move as much as possible to the <span class="highlight-green1">Compiler</span></h2>
@@ -193,6 +229,12 @@ logger.error(
       <h1>How?</h1>
       <h2 class="fragment">Just give it <br/><span class="highlight-green1">enough type information.</span></h2>
       <h4 class="fragment">Type system to the rescue!</h4>
+      <aside class="notes">
+        * В большинстве случаев проверять что-то в рантайме приходится из-зи надостаточной информации о типах<br/>
+        ...
+        * Сейчас мы будем говорить о том, как выжать максимум из системы типов Scala.<br/>
+        * Примеры будут идти по возрастанию сложности, начнем с простых, но ... -> переключаю<br/>
+      </aside>
     </section>
     <section>
       <h2>Before we start...</h2>
@@ -202,6 +244,9 @@ logger.error(
       <h1>Beefcakes!</h1>
       <img src="img/beefcakes.jpg" width="80%">
       <h4>No offense intended :)</h4>
+      <aside class="notes">
+        * Конечно же здесь нет намерений кого-то задеть или обидеть, просто немного легкой иронии
+      </aside>
     </section>
     <section>
       <h2>Ok?</h2>
@@ -222,6 +267,11 @@ def becomeAMan(douchebag: Person): Man =
           </code>
         </pre>
       </div>
+      <aside class="notes">
+        * волшебный метод <br/>
+        * кто мне скажет, что тут не так? <br/>
+        * дамы и господа, встречайте нашего первого фигуранта, скольский тип по имени NULL ->
+      </aside>
     </section>
     <section>
       <h1 class="highlight-red1">NULL</h1>
@@ -238,12 +288,15 @@ else
   //...
         </code>
       </pre>
+      <aside class="notes">
+        * скажите честно, кто из вас любит писать такую вот лапшу?
+      </aside>
     </section>
     <section>
       <h2 class="highlight-yellow">Still not nice.</h2>
       <ul>
-        <li class="fragment roll-in">compiler won't complain if you forget to check</li>
         <li class="fragment roll-in">code client has to clutter code with <span class="highlight-yellow">runtime checks</span> (or fail)</li>
+        <li class="fragment roll-in">compiler won't complain if you forget to check</li>
       </ul>
     </section>
     <section>
@@ -259,10 +312,16 @@ else
       <h3>The problem is</h3>
       <h2 class="fragment roll-in highlight-yellow">insufficient type information!</h2>
       <h3 class="fragment roll-in">Return type should be something like <code class="highlight-aqua">ManOrNull</code></h3>
+      <aside class="note">
+        * сигнатура врет!
+      </aside>
     </section>
     <section>
       <h1 class="highlight-green1"><code>Option</code></h1>
       <img src="img/option.jpg">
+      <aside class="notes">
+        В любом случае нужно сначала иметь дело с банкой
+      </aside>
     </section>
     <section>
       <h2 class="highlight-green1"><code>Option</code></h2>
@@ -289,6 +348,9 @@ def becomeAMan(douchebag: Person): Option[Man] =
         <li class="fragment roll-in">code is <span class="highlight-green1">documentation</span></li>
         <li class="fragment roll-in">client has to deal with <code>None</code> result <span class="highlight-green1">at compile time.</span></li>
       </ul>
+      <aside class="notes">
+        Наше намерение как проектировщиков API стало более явным
+      </aside>
     </section>
     <section>
       <h2>Use wrapped value?</h2>
@@ -308,6 +370,10 @@ def willHaveASexyGirlfriend(douchebag: Person): Boolean =
   }
         </code>
       </pre>
+      <aside class="note">
+        * Pattern matching - наиболее общий способ разворачивания Option
+        * проверить наличие значения можно и проще, это просто пример
+      </aside>
     </section>
     <section>
        <h1 class="highlight-orange">Exceptions</h1>
@@ -331,6 +397,9 @@ def workout(man: Man): WorkoutResult =
           <li>Return type doesn't tell anything about possible failure</li>
         </ul>
       </div>
+      <aside class="notes">
+        Сигнатура врет опять
+      </aside>
     </section>
     <section>
       <h1>Let's add some types!</h1>
@@ -339,6 +408,9 @@ def workout(man: Man): WorkoutResult =
       <h1><code>scala.Either</code></h1>
       <h3>or</h3>
       <h1><code>scalaz.\/</code></h1>
+      <aside class="note">
+        Один из самых популярных способов использования -> перелистываю
+      </aside>
     </section>
     <section>
       <h2>Declare possible failure</h2>
@@ -359,6 +431,10 @@ def workout(man:Man): ProteinFail \/ WorkoutResult =
         <li class="fragment roll-in">code is <span class="highlight-green1">documentation</span></li>
         <li class="fragment roll-in">client has to deal with errors <span class="highlight-green1">at compile time.</span></li>
       </ul>
+      <aside class="note">
+        Если кому-то непонятна инфиксная запись - то это просто фича языка,
+        позволяющая для классов и трейтов с двумя тайп-параметрами использовать такую запись
+      </aside>
     </section>
     <section>
       <h2 class="highlight-green1"><code>scalaz.\/</code></h2>
@@ -369,6 +445,7 @@ case class -\/[E](a: E) extends (E \/ Nothing)
 case class \/-[R](a: R) extends (Nothing \/ R)
         </code>
       </pre>
+      <aside class="note">перелистнуть назад, показать во что конвертируют методы right и left</aside>
     </section>
     <section>
       <h2>Use wrapped value?</h2>
