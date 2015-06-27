@@ -312,7 +312,7 @@ else
       <h3>The problem is</h3>
       <h2 class="fragment roll-in highlight-yellow">insufficient type information!</h2>
       <h3 class="fragment roll-in">Return type should be something like <code class="highlight-aqua">ManOrNull</code></h3>
-      <aside class="note">
+      <aside class="notes">
         * сигнатура врет!
       </aside>
     </section>
@@ -370,7 +370,7 @@ def willHaveASexyGirlfriend(douchebag: Person): Boolean =
   }
         </code>
       </pre>
-      <aside class="note">
+      <aside class="notes">
         * Pattern matching - наиболее общий способ разворачивания Option
         * проверить наличие значения можно и проще, это просто пример
       </aside>
@@ -408,7 +408,7 @@ def workout(man: Man): WorkoutResult =
       <h1><code>scala.Either</code></h1>
       <h3>or</h3>
       <h1><code>scalaz.\/</code></h1>
-      <aside class="note">
+      <aside class="notes">
         Один из самых популярных способов использования -> перелистываю
       </aside>
     </section>
@@ -431,7 +431,7 @@ def workout(man:Man): ProteinFail \/ WorkoutResult =
         <li class="fragment roll-in">code is <span class="highlight-green1">documentation</span></li>
         <li class="fragment roll-in">client has to deal with errors <span class="highlight-green1">at compile time.</span></li>
       </ul>
-      <aside class="note">
+      <aside class="notes">
         Если кому-то непонятна инфиксная запись - то это просто фича языка,
         позволяющая для классов и трейтов с двумя тайп-параметрами использовать такую запись
       </aside>
@@ -445,7 +445,7 @@ case class -\/[E](a: E) extends (E \/ Nothing)
 case class \/-[R](a: R) extends (Nothing \/ R)
         </code>
       </pre>
-      <aside class="note">перелистнуть назад, показать во что конвертируют методы right и left</aside>
+      <aside class="notes">перелистнуть назад, показать во что конвертируют методы right и left</aside>
     </section>
     <section>
       <h2>Use wrapped value?</h2>
