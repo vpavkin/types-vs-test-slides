@@ -471,6 +471,13 @@ def tellAboutTheWorkout(w: ProteinFail \/ WorkoutResult): String =
     <section>
       <h2><code>isInstanceOf[Man]</code></h2>
       <img src="img/isInstanceOf.gif"  style="width: 30vw;">
+      <aside class="notes">
+        * Чаще всего такая проверка - знак того, что что-то не так с кодом.
+        * Что означает такой вызов - что в данном контексте могут быть несколько вариантов типов
+        * Для работы с такими ситуациями должны быть свои инструменты
+        * Где-то (например ActionScript 3) этот момент не проработан и приходится довольствоваться тем что есть
+        * намеренно не ссылаюсь на Java: 1) не знаток, 2) начинаются холивары
+      </aside>
     </section>
     <section>
       <h2><code>isInstanceOf[T]</code></h2>
@@ -542,6 +549,13 @@ def gymPrice(h: GymClient): Int =
       <p></p>
       <h3 class="fragment roll-in">1) Product types</h3>
       <h3 class="fragment roll-in">2) Sum types</h3>
+      <aside class="notes">
+        <p>Product - тип обладающий 1м или несколькими свойствами (множество значений - произведение св-в)</p>
+        <p>Пример - гантеля (материал и вес)</p>
+        <p>Sun - тип, представимый несколькими под-типами (множество значений - сумма подтипов)</p>
+        <p>Пример - блин для гантели (бывает красный, синий и желтый)</p>
+        <p>Когда мы используем sealed иерархию, то получаем бонус ...</p>
+      </aside>
     </section>
     <section>
       <h2><span class="highlight-green1">Compiler knows</span><br/> all the possible class/trait children.</h2>
@@ -586,6 +600,9 @@ def gymPrice(h: GymClient): Int = h match {
 // COMPILE ERROR! Match fails for PrettyGirl.
         </code>
       </pre>
+      <aside class="notes">
+        Да, не везде получится использовать sealed иерархию... но в данном случае...
+      </aside>
     </section>
     <section>
       <h2 class="highlight-green1">Compiler saved us again!</h2>
@@ -594,6 +611,10 @@ def gymPrice(h: GymClient): Int = h match {
     <section>
       <h2>Tagging</h2>
       <img src="img/tag.jpg" style="width: 30vw">
+      <aside class="notes">
+        <p>* Тэггинг в основном служит вспомогательной техникой для построения более высокоуровневый type-safe конструкций</p>
+        <p>* По сути - это навешивание дополнительной метки на тип, помогающей компилятору и нам</p>
+      </aside>
     </section>
     <section>
       <h2>Gym DB</h2>
@@ -605,6 +626,10 @@ case class GymPass(id: String,
                    ownerId: String)
          </code>
        </pre>
+      <aside class="notes">
+        <p>* В id-шки можно понапихать чего угодно, есть вероятность подставить не ту строку</p>
+        <p>* В принципе ничего страшного, но можно лучше</p>
+      </aside>
     </section>
     <section>
       <h2>Safer: <span class="fragment roll-in">Tags</span></h2>
@@ -639,6 +664,12 @@ case class GymPass(id: String @@ GymPass,
     <section>
       <h2>Phantom Types</h2>
       <img src="img/PhantomType.jpg">
+      <aside class="notes">
+        <p>* Здесь начинаются более сложные примеры, первый из них PhantomTypes</p>
+        <p>* Это целый набор приемов, объединенных одним свойством - дополнительные введенные типы участвуют только в компиляции и не попадают в рантайм</p>
+        <p>* В данном случае мы рассмотрим управление доступом к разлиным методам объекта в зависимости от его состояния НА ЭТАПЕ КОМПИЛЯЦИИ</p>
+        <p>* Про подтягивания и рантайм вариант исполнения на исключениях</p>
+      </aside>
     </section>
     <section>
       <h2>PullUp</h2>
@@ -667,6 +698,7 @@ object Beefcake {
 }
          </code>
        </pre>
+      <aside class="notes">ничто не мешает сделать каст, так как нет значений с типом S</aside>
     </section>
     <section>
       <h2>PullUp</h2>
@@ -680,6 +712,7 @@ val notAgainPlease = heDidIt.pullUp()
 // to method pullUp's type parameter bounds
          </code>
        </pre>
+      <aside class="notes">Мы на этапе компиляции запрещаем или разрешаем вызов метода у одного и того же объекта, в зависимости от внутреннего состояния.</aside>
     </section>
     <section>
       <h2>Path Dependent Types</h2>
