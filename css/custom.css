@@ -14,23 +14,23 @@
 }
 
 .reveal .slides section .highlight-red1 {
-	color: #ff2c2d;
+	color: #ff2d55
 }
 
 .reveal .slides section .highlight-green1 {
-	color: #17ff2e;
+	color: #4CD964;
 }
 
 .reveal .slides section .highlight-orange {
-	color: #ff8811;
+	color: #FC880E;
 }
 
 .reveal .slides section .highlight-yellow {
-	color: #ffff00;
+	color: #F4FB47;
 }
 
 .reveal .slides section .highlight-aqua {
-	color: #78ffff;
+	color: #158EF9;
 }
 
 .reveal .slides code {
@@ -48,4 +48,3 @@
 	line-height: normal;
 	padding: 10px;
 }
-
